@@ -8,4 +8,10 @@ match_deps = "^github.com/(siderolabs/[a-zA-Z0-9-]+)$"
 # previous = -
 # pre_release = true
 
-# [notes]
+[notes.initial-release]
+title = "Omni Audit Log Exporter"
+description = """\
+The exporter follows the audit log of an Omni instance and writes each event to stdout as a line of JSON, so the output can be piped into any log \
+shipper or file. It resumes where it left off across reconnects and restarts by keeping a position file, and retries transient failures with backoff. \
+It requires an Omni service account with the Admin role, and an Omni version whose management API supports following the audit log.
+"""
