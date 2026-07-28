@@ -13,10 +13,11 @@ It requires an Omni version with audit log follow support in the management API,
 Create a service account on your Omni instance:
 
 ```sh
-omnictl serviceaccount create --use-user-role=false --role=Admin audit-log-exporter
+omnictl serviceaccount create --use-user-role=false --role=Auditor audit-log-exporter
 ```
 
-The account must have the `Admin` role, since reading the audit log is an administrative operation.
+The account must have the `Auditor` role, which grants read access plus the audit log and nothing else.
+On Omni versions that predate the `Auditor` role, use `Admin` instead, which also grants user management and administrative access to every managed Kubernetes cluster.
 Note that `--use-user-role` defaults to true, which would clone the role of the user running the command instead.
 
 The command prints an `OMNI_SERVICE_ACCOUNT_KEY`.
@@ -65,7 +66,7 @@ Four failures end the exporter instead of being retried, because retrying will n
 - The server does not support following the audit log (an older Omni version).
 - The server no longer knows the resume position, e.g. because its database was restored from a backup.
   Recover by removing the state file: the next start positions itself with `--start-from`.
-- The service account does not have permission to read the audit log.
+- The service account does not have permission to read the audit log, meaning its role is neither `Auditor` nor `Admin`.
 - The exporter itself cannot write, an event to stdout or the position to the state file.
 
 Everything else, including an unreachable server and authentication failures, is retried with backoff forever.

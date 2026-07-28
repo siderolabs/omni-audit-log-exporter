@@ -16,7 +16,8 @@ A daemon that follows the audit log of an [Omni](https://github.com/siderolabs/o
 Logs go to stderr, so stdout carries nothing but the events and can be piped into any log shipper or file.
 There is deliberately no HTTP surface, no output plugins and no filtering: the tool does one thing, and downstream tooling composes with it through stdout.
 
-It authenticates with an Omni service account that must have the `Admin` role, because reading the audit log is an administrative operation.
+It authenticates with an Omni service account that must have the `Auditor` role, which is read access plus the audit log.
+Omni checks audit log access by exact role rather than by rank, so `Operator` cannot read it despite outranking `Auditor`, and only `Admin` works as the alternative.
 It requires an Omni version whose management API supports following the audit log, and the audit log must be enabled on the instance.
 A disabled audit log surfaces as an endless retry loop rather than a distinct failure, because the server reports it as a plain error.
 
